@@ -1,4 +1,11 @@
 #!/bin/bash
+#WAP_SHOULD_EXIT=
+#WAP_DEBUG=
+
+error() {
+	(>&2 echo "$(tput setab 1)$*$(tput sgr0)")
+}
+
 wonderful_argument_parser() {
 	# from the top, the function to look for
 	fn=$1;
@@ -28,8 +35,6 @@ wonderful_argument_parser() {
 
 		shift;
 	done
-	#echo "${signature[*]}"
-
 
 	for arg in "${signature[@]}"; do
 		if [[ "$arg" == '<'* ]]; then
@@ -43,7 +48,7 @@ wonderful_argument_parser() {
 			optional_args+=("$(echo "$arg" | sed 's/^\[//;s/\]$//')")
 		else
 			# This is an error
-			echo "ERROR!!! Bad argument specification: $arg"
+			error "ERROR!!! Bad argument specification: $arg"
 		fi
 	done
 
@@ -71,13 +76,15 @@ wonderful_argument_parser() {
 						if [[ "$arg" == '['$a_cur'|'* ]]; then
 							val="${args[$offset+1]}"
 							offset=$(( offset + 1 ))
-							parsed_keys+=("${a_cur/--/}")
+							k="$(echo "$a_cur" | sed 's/^--//;s/-/_/g')"
+							parsed_keys+=("${k}")
 							parsed_vals+=("$val")
 						fi
 					else
 						# This is just a flag
 						if [[ "$arg" == '['$a_cur']' ]]; then
-							parsed_keys+=("${a_cur/--/}")
+							k="$(echo "$a_cur" | sed 's/^--//;s/-/_/g')"
+							parsed_keys+=("${k}")
 							parsed_vals+=(1)
 						fi
 					fi
@@ -87,8 +94,12 @@ wonderful_argument_parser() {
 			# This is a non-flag, so maybe a positional, maybe an optional argument.
 			# So we need to find the Nth positional (via positional_index)
 			if (( (positional_index + optional_index) >= (positional_count + optional_count) )); then
-				echo "Error: more positional arguments than should be possible"
-				exit 1;
+				error "Error: more positional arguments than should be possible"
+				if [[ -n $WAP_SHOULD_EXIT ]]; then
+					exit 1;
+				else
+					return;
+				fi
 			fi
 
 			if (( positional_index < positional_count )); then
@@ -102,11 +113,11 @@ wonderful_argument_parser() {
 				parsed_vals+=("${a_cur}")
 				optional_index=$(( optional_index + 1 ))
 			fi
-
 		fi
 		offset=$(( offset + 1 ))
 	done
 
+	# Set all default optional args, if they aren't set
 	if (( optional_index < optional_count )); then
 		for i in $(seq $optional_index $((optional_count - 1)) ); do
 			if [[ "${optional_args[$i]}" == *'|'* ]]; then
@@ -118,13 +129,21 @@ wonderful_argument_parser() {
 	fi
 
 	if (( positional_index < positional_count )); then
-		echo "More positional arguments are required"
-		exit 1;
+		for i in $(seq $positional_index $(( positional_count - 1 )) ); do
+			error "Required argument <${positional_args[$i]}> is missing"
+		done
+		if [[ -n $WAP_SHOULD_EXIT ]]; then
+			exit 1;
+		else
+			return;
+		fi
 	fi
 
 	size=${#parsed_keys[@]}
 	for i in $(seq 0 $((size - 1))); do
-		#printf "\t%10s=%-10s\n" "${parsed_keys[$i]}" "${parsed_vals[$i]}"
+		if [[ -z $WAP_DEBUG ]]; then
+			printf "\t%10s=%-10s\n" "${parsed_keys[$i]}" "${parsed_vals[$i]}"
+		fi
 		export arg_${parsed_keys[$i]}=${parsed_vals[$i]}
 	done
 }
