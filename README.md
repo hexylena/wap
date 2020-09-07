@@ -2,8 +2,19 @@
 
 A simple bash function signature parser that turns function comments into a usable CLI. No bucket or mop required, this library takes care of all the mess.
 
-This builds off of the work in [`gxadmin`](https://github.com/usegalaxy-eu/gxadmin) and provides a pretty acceptable CLI parser without the annoyances of setting up, shifting arguments, or validating that there aren't too many or too few.
+## Alternatives?
 
+Ugly case statements
+
+![an ugly case statement](./img/case.png)
+
+Incomprehensible getopt commands
+
+![getopt commands are completely unreadable](./img/getopts.png)
+
+Very ugly
+
+## Instead, WAP
 
 ```
 # Load the Wonderful Argument Parser library
@@ -11,6 +22,8 @@ This builds off of the work in [`gxadmin`](https://github.com/usegalaxy-eu/gxadm
 
 # Define our function
 fn() { ## <something> <sth2> [weeks] [--email|user@host] [--flag1] [--f3]
+
+	# These variables are auto-magically set.
 	echo "something=$arg_something"
 	echo "     sth2=$arg_sth2"
 	echo "    weeks=$arg_weeks"
@@ -19,7 +32,7 @@ fn() { ## <something> <sth2> [weeks] [--email|user@host] [--flag1] [--f3]
 	echo "       f3=$arg_f3"
 }
 
-# Parse the arguments.
+# Parse the arguments, do the magic
 wonderful_argument_parser fn $@
 
 # Call the function
