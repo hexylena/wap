@@ -6,7 +6,7 @@ A simple bash function signature parser that turns function comments into a usab
 
 Case & Loop                               | Getopt
 ---                                       | ---
-![an ugly case statement](./img/case.png) | ![getopt commands are completely unreadable](./img/getopts.png)
+![an ugly case statement](.img/case.png) | ![getopt commands are completely unreadable](.img/getopts.png)
 Not something to write dozens of times    | Completely incomprehensible for newcomers.
 
 Very ugly.
