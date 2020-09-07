@@ -1,6 +1,6 @@
 # Wonderful Argument Parser
 
-A simple bash parser utilising my favourite trick of grepping through your own file.
+A simple bash function signature parser that turns function comments into a usable CLI. No bucket or mop required, this library takes care of all the mess.
 
 This builds off of the work in [`gxadmin`](https://github.com/usegalaxy-eu/gxadmin) and provides a pretty acceptable CLI parser without the annoyances of setting up, shifting arguments, or validating that there aren't too many or too few.
 
