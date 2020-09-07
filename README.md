@@ -64,17 +64,24 @@ Mandatory arguments are ensured:
 
 ```
 $ ./example.sh
-More positional arguments are required
-1$
+Required argument <something> is missing
+Required argument <sth2> is missing
 ```
 
 and
 
 ```
-$ ./example.sh a b c d
+./example.sh a b c d e
 Error: more positional arguments than should be possible
-1$
 ```
+
+## Variables
+
+Var               | Usage
+----------------- | ---
+`WAP_SHOULD_EXIT` | If this is set, then it will **not** exit
+`WAP_DEBUG`       | If this is set, then some debugging info will be printed
+
 
 ## License
 

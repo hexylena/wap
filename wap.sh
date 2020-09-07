@@ -95,7 +95,7 @@ wonderful_argument_parser() {
 			# So we need to find the Nth positional (via positional_index)
 			if (( (positional_index + optional_index) >= (positional_count + optional_count) )); then
 				error "Error: more positional arguments than should be possible"
-				if [[ -n $WAP_SHOULD_EXIT ]]; then
+				if [[ -z $WAP_SHOULD_EXIT ]]; then
 					exit 1;
 				else
 					return;
@@ -132,7 +132,7 @@ wonderful_argument_parser() {
 		for i in $(seq $positional_index $(( positional_count - 1 )) ); do
 			error "Required argument <${positional_args[$i]}> is missing"
 		done
-		if [[ -n $WAP_SHOULD_EXIT ]]; then
+		if [[ -z $WAP_SHOULD_EXIT ]]; then
 			exit 1;
 		else
 			return;
