@@ -1,6 +1,8 @@
 # Wonderful Argument Parser
 
-A simple ./argument parser utilising my favourite trick of grepping through your own file.
+A simple bash parser utilising my favourite trick of grepping through your own file.
+
+This builds off of the work in [`gxadmin`](https://github.com/usegalaxy-eu/gxadmin) and provides a pretty acceptable CLI parser without the annoyances of setting up, shifting arguments, or validating that there aren't too many or too few.
 
 
 ```
@@ -56,6 +58,22 @@ something=a
     email=h@localhost
     flag1=1
        f3=1
+```
+
+Mandatory arguments are ensured:
+
+```
+$ ./example.sh
+More positional arguments are required
+1$
+```
+
+and
+
+```
+$ ./example.sh a b c d
+Error: more positional arguments than should be possible
+1$
 ```
 
 ## License

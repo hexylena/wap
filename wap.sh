@@ -20,7 +20,7 @@ wonderful_argument_parser() {
 		args+=("$x");
 		shift;
 	done
-	echo "${signature[*]}"
+	#echo "${signature[*]}"
 
 
 	for arg in "${signature[@]}"; do
@@ -44,7 +44,6 @@ wonderful_argument_parser() {
 	optional_count=${#optional_args[@]}
 
 	offset=0
-	echo "Parsing arguments"
 	while true; do
 		# Get the first bit of content from the arguments
 		a_cur=${args[$offset]}
@@ -83,7 +82,6 @@ wonderful_argument_parser() {
 				echo "Error: more positional arguments than should be possible"
 				exit 1;
 			fi
-			echo "WAP $a_cur | $positional_index $positional_count"
 
 			if (( positional_index < positional_count )); then
 				parsed_keys+=("${positional_args[$positional_index]}")
