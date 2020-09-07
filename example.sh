@@ -4,9 +4,10 @@
 . wap.sh
 
 # Define our function
-fn() { ## <something> <sth2> [weeks] [--email|user@host] [--flag1] [--f3]
+fn() { ## <something> <sth2> [testing] [weeks|24] [--email|user@host] [--flag1] [--f3]
 	echo "something=$arg_something"
 	echo "     sth2=$arg_sth2"
+	echo "  testing=$arg_testing"
 	echo "    weeks=$arg_weeks"
 	echo "    email=$arg_email"
 	echo "    flag1=$arg_flag1"

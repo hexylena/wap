@@ -15,9 +15,17 @@ wonderful_argument_parser() {
 
 	# shellcheck disable=SC2207
 	signature=($(grep "${fn}()" "$0" | sed 's/.*## //g'))
+	signature+=('[--help]') # This is always available
+
 	# shellcheck disable=SC2068
 	for x in $@; do
 		args+=("$x");
+
+		# If the help flag is in there, we can short-circuit
+		if [[ "$x" == "--help" ]] || [[ "$x" == "-h" ]]; then
+			return
+		fi
+
 		shift;
 	done
 	#echo "${signature[*]}"
@@ -89,7 +97,8 @@ wonderful_argument_parser() {
 				positional_index=$((positional_index + 1))
 			else
 				# We're past the positional and into the optional
-				parsed_keys+=("${optional_args[$optional_index]}")
+				k="${optional_args[$optional_index]}"
+				parsed_keys+=("$(echo "$k" | sed 's/|.*//g')")
 				parsed_vals+=("${a_cur}")
 				optional_index=$(( optional_index + 1 ))
 			fi
@@ -97,6 +106,16 @@ wonderful_argument_parser() {
 		fi
 		offset=$(( offset + 1 ))
 	done
+
+	if (( optional_index < optional_count )); then
+		for i in $(seq $optional_index $((optional_count - 1)) ); do
+			if [[ "${optional_args[$i]}" == *'|'* ]]; then
+				k="${optional_args[$i]}"
+				parsed_keys+=("$(echo "$k" | sed 's/|.*//g')")
+				parsed_vals+=("$(echo "$k" | sed 's/.*|//g')")
+			fi
+		done
+	fi
 
 	if (( positional_index < positional_count )); then
 		echo "More positional arguments are required"
