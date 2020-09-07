@@ -93,6 +93,12 @@ Var               | Usage
 `WAP_DEBUG`       | If this is set, then some debugging info will be printed
 
 
+## Q & A
+
+Q  | A
+-- | --
+Why no short flags | Something something be explicit everywhere
+
 ## License
 
 GPL-3.0
