@@ -4,15 +4,12 @@ A simple bash function signature parser that turns function comments into a usab
 
 ## Alternatives?
 
-Ugly case statements
+Case & Loop                               | Getopt
+---                                       | ---
+![an ugly case statement](./img/case.png) | ![getopt commands are completely unreadable](./img/getopts.png)
+Not something to write dozens of times    | Completely incomprehensible for newcomers.
 
-![an ugly case statement](./img/case.png)
-
-Incomprehensible getopt commands
-
-![getopt commands are completely unreadable](./img/getopts.png)
-
-Very ugly
+Very ugly.
 
 ## Instead, WAP
 
