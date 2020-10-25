@@ -18,7 +18,7 @@ Very ugly.
 . wap.sh
 
 # Define our function
-fn() { ## <something> <sth2> [weeks] [--email|user@host] [--flag1] [--f3]
+fn() { ## <something> <sth2> [weeks|1] [--email|user@host] [--flag1] [--f3]
 
 	# These variables are auto-magically set.
 	echo "something=$arg_something"
@@ -40,10 +40,10 @@ When you run this example:
 
 
 ```
-$ ./example.sh a b 4
+$ ./example.sh a b
 something=a
      sth2=b
-    weeks=4
+    weeks=
     email=
     flag1=
        f3=
