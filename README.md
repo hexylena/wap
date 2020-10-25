@@ -36,6 +36,41 @@ wonderful_argument_parser fn $@
 fn
 ```
 
+## Function Discovery
+
+For easiest usage, just call WAPify
+
+```
+#!/bin/bash
+
+# Load the Wonderful Argument Parser library
+. wap.sh
+
+# Define our function
+fn1() { ## <something> <sth2> [testing] [weeks|24] [--email|user@host] [--flag1] [--f3]
+	wap_help <<-EOF
+		This does a lot of things with very many arguments. Prints out all of the arguments.
+	EOF
+	...
+}
+
+fn2() { ## <some> <other> [--args]
+	wap_help <<-EOF
+		This does something else, with some other arguments.
+	EOF
+	...
+}
+
+
+# Discover functions, handle unknown functions, help, etc.
+wapify $@
+```
+
+Compatible functions will be auto-discovered, help menus rendered when necessary (--help | -h), and a function list provided, should they invoke the command without arguments.
+
+
+## Examples
+
 When you run this example:
 
 

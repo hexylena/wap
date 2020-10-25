@@ -29,9 +29,10 @@ wonderful_argument_parser() {
 		args+=("$x");
 
 		# If the help flag is in there, we can short-circuit
-		#if [[ "$x" == "--help" ]] || [[ "$x" == "-h" ]]; then
-		#	return
-		#fi
+		if [[ "$x" == "--help" ]] || [[ "$x" == "-h" ]]; then
+			WAP_HELP=1
+			return
+		fi
 
 		shift;
 	done
@@ -149,7 +150,7 @@ wonderful_argument_parser() {
 }
 
 wap_help() {
-	if (( arg_help != 0 )); then
+	if (( WAP_HELP == 1 )); then
 		echo HELP [$fn]
 		echo
 		cat - | fold -w 80 | sed 's/^/\t/'
@@ -167,7 +168,7 @@ wapify() {
 	if (( ec != 0 )); then
 		echo "Available commands:"
 		echo
-		grep '() { ##' $0 | sed 's/().*//g'
+		grep '() { ##' $0 | sed 's/().*//g' | sort
 		exit 1
 	fi
 
