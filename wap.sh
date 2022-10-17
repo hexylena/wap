@@ -24,8 +24,7 @@ wonderful_argument_parser() {
 	signature=($(grep "${fn}()" "$0" | sed 's/.*## //g'))
 	signature+=('[--help]') # This is always available
 
-	# shellcheck disable=SC2068
-	for x in $@; do
+	for x in "$@"; do
 		args+=("$x");
 
 		# If the help flag is in there, we can short-circuit
@@ -145,7 +144,7 @@ wonderful_argument_parser() {
 		if [[ -z $WAP_DEBUG ]]; then
 			printf "\t%10s=%-10s\n" "${parsed_keys[$i]}" "${parsed_vals[$i]}"
 		fi
-		export arg_${parsed_keys[$i]}=${parsed_vals[$i]}
+		export arg_${parsed_keys[$i]}="${parsed_vals[$i]}"
 	done
 }
 
