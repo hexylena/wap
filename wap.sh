@@ -1,6 +1,7 @@
 #!/bin/bash
 #WAP_SHOULD_EXIT=
 #WAP_DEBUG=1
+WAP_SPLIT_TERM='##'
 
 error() {
 	(>&2 echo "$(tput setab 1)$*$(tput sgr0)")
@@ -21,7 +22,7 @@ wonderful_argument_parser() {
 	optional_index=0
 
 	# shellcheck disable=SC2207
-	signature=($(grep "${fn}()" "$0" | sed 's/.*## //g'))
+	signature=($(grep "${fn}()" "$0" | sed "s/.*${WAP_SPLIT_TERM} //g"))
 	signature+=('[--help]') # This is always available
 	# Not to specification.
 	#signature+=('[-h]') # This is always available
@@ -230,6 +231,7 @@ wap_debug_available_args() {
 	done
 }
 
+# TODO: update with gxadmin version of function discovery.
 wapify() {
 	# Discover functions
 	fn=$1; shift;
@@ -239,7 +241,7 @@ wapify() {
 	if (( ec != 0 )); then
 		echo "Available commands:"
 		echo
-		grep '()\s*{\s*##' $0 | sed 's/().*//g' | sort
+		grep '()\s*{\s*'"${WAP_SPLIT_TERM}" $0 | sed 's/().*//g' | sort
 		exit 1
 	fi
 
