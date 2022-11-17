@@ -3,6 +3,7 @@
 # Load the Wonderful Argument Parser library
 . wap.sh
 
+_fn_help="Some basic functions"
 fn_req(){ ## <a> <b>: Basic Required args
 	wap_help <<-EOF
 		required
@@ -44,6 +45,7 @@ fn_optional(){ ## [optional]: A completely optional thing
 	wap_debug_available_args
 }
 
+_group_help="More Advanced"
 group_1(){ ## <x> <y|z> [user|email|id] [--a] [--b=] [--c=1]: Fancy!
 	wap_help <<-EOF
 		Documentation for fn1, it does lots of things!

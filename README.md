@@ -99,8 +99,8 @@ Try out `example-auto.sh` with the subcommand splitting:
 $ WAP_SUBCOMMANDS=1 ./example-auto.sh
 ./example-auto.sh usage:
 
-  fn
-  group
+  fn    Some basic functions
+  group More Advanced
 
 $ WAP_SUBCOMMANDS=1 ./example-auto.sh group
 Available functions in ./example-auto.sh group:
@@ -108,6 +108,8 @@ Available functions in ./example-auto.sh group:
   group 1  Fancy!
   group 2  The same!
 ```
+
+to get the help on a group of functions with the same prefix, simply set `_{group}_help="Some Help Text"`
 
 
 ## Variables

@@ -259,7 +259,8 @@ wapify_subcommands_help() {
 	echo "$0 usage:"
 	echo
 	for group in "${subcommand_groups[@]}"; do
-		echo -e "\t$group"
+		help_text="_${group}_help"
+		echo -e "  $group\t${!help_text}"
 	done
 	echo
 	exit 0
