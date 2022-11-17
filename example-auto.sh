@@ -8,22 +8,24 @@ fn_req(){ ## <a> <b>
 		required
 	EOF
 
-	echo $arg_a
-	echo $arg_b
+	# This is a debug function to show you what variables are set.
+	# You can just use the arguments named $arg_a and $arg_b
+	# to access the values passed in.
+	wap_debug_available_args
 }
 
 fn_flag(){ ## [--flag]
 	wap_help <<-EOF
 		flag (bool)
 	EOF
-	echo $arg_flag
+	wap_debug_available_args
 }
 
-fn_flag_val(){ ## [--flag=<interval>]
+fn_flag_val(){ ## [--a=<interval>] [--b=<user_id>]
 	wap_help <<-EOF
-		flag (val, no default)
+		flag (with a value, no default)
 	EOF
-	echo $arg_flag
+	wap_debug_available_args
 }
 
 fn_flag_val_default(){ ## [--flag=2]
@@ -31,7 +33,7 @@ fn_flag_val_default(){ ## [--flag=2]
 		flag (val, default)
 	EOF
 
-	echo $arg_flag
+	wap_debug_available_args
 }
 
 fn_optional(){ ## [optional]
@@ -39,20 +41,12 @@ fn_optional(){ ## [optional]
 		optional
 	EOF
 
-	echo $arg_optional
+	wap_debug_available_args
 }
-
-#fn_optional_default(){ ## [optional_default=4]
-	#wap_help <<-EOF
-		#optional_default
-	#EOF
-
-	#echo $arg_optional_default
-#}
 
 fn1(){ ## <x> <y|z> [user|email|id] [--a] [--b=] [--c=1]
 	wap_help <<-EOF
-		Documentation for fn1, it does blah
+		Documentation for fn1, it does lots of things!
 	EOF
 
 	wap_debug_available_args
