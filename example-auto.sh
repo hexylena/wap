@@ -3,31 +3,60 @@
 # Load the Wonderful Argument Parser library
 . wap.sh
 
-# Define our function
-fn1() { ## <something> <sth2> [testing] [weeks|24] [--email|user@host] [--flag1] [--f3]
+fn_req(){ ## <a> <b>
 	wap_help <<-EOF
-		This does a lot of things with very many arguments. Prints out all of the arguments.
+		required
 	EOF
 
-	echo "something=$arg_something"
-	echo "     sth2=$arg_sth2"
-	echo "  testing=$arg_testing"
-	echo "    weeks=$arg_weeks"
-	echo "    email=$arg_email"
-	echo "    flag1=$arg_flag1"
-	echo "       f3=$arg_f3"
+	echo $arg_a
+	echo $arg_b
 }
 
-fn2() { ## <some> <other> [--args]
+fn_flag(){ ## [--flag]
 	wap_help <<-EOF
-		This does something else, with some other arguments.
+		flag (bool)
+	EOF
+	echo $arg_flag
+}
+
+fn_flag_val(){ ## [--flag=<interval>]
+	wap_help <<-EOF
+		flag (val, no default)
+	EOF
+	echo $arg_flag
+}
+
+fn_flag_val_default(){ ## [--flag=2]
+	wap_help <<-EOF
+		flag (val, default)
 	EOF
 
-	echo "     some=$arg_some"
-	echo "    other=$arg_other"
-	echo "     args=$arg_args"
+	echo $arg_flag
 }
 
+fn_optional(){ ## [optional]
+	wap_help <<-EOF
+		optional
+	EOF
+
+	echo $arg_optional
+}
+
+fn_optional_default(){ ## [optional_default=4]
+	wap_help <<-EOF
+		optional_default
+	EOF
+
+	echo $arg_optional_default
+}
+
+fn1(){ ## <x> <y|z> [user|email|id] [--a] [--b=] [--c=1]
+	wap_help <<-EOF
+		Documentation for fn1, it does blah
+	EOF
+
+	wap_debug_available_args
+}
 
 # Discover functions, handle unknown functions, help, etc.
 wapify $@
