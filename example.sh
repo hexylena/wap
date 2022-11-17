@@ -4,14 +4,9 @@
 . wap.sh
 
 # Define our function
-fn() { ## <something> <sth2> [testing] [weeks|24] [--email|user@host] [--flag1] [--f3]
-	echo "something=$arg_something"
-	echo "     sth2=$arg_sth2"
-	echo "  testing=$arg_testing"
-	echo "    weeks=$arg_weeks"
-	echo "    email=$arg_email"
-	echo "    flag1=$arg_flag1"
-	echo "       f3=$arg_f3"
+fn() { ## <req> <req2> [optionalA] [optionalB] [--weeks=24] [--email=user@host] [--flag1] [--flag2]
+	wap_help <<< "This is an example WAP-ified function"
+	wap_debug_available_args
 }
 
 # Parse the arguments.
