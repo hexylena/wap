@@ -61,7 +61,6 @@ fn2() { ## <some> <other> [--args]
 	...
 }
 
-
 # Discover functions, handle unknown functions, help, etc.
 wapify $@
 ```
@@ -82,6 +81,34 @@ and
 ./example.sh a b c d e
 Error: more positional arguments than should be possible
 ```
+
+## Prefer Subcommands?
+
+It's possible! Just use
+
+```bash
+wapify_subcommands $@
+```
+
+instead of `wapify`!
+
+
+Try out `example-auto.sh` with the subcommand splitting:
+
+```
+$ WAP_SUBCOMMANDS=1 ./example-auto.sh
+./example-auto.sh usage:
+
+  fn
+  group
+
+$ WAP_SUBCOMMANDS=1 ./example-auto.sh group
+Available functions in ./example-auto.sh group:
+
+  group 1  Fancy!
+  group 2  The same!
+```
+
 
 ## Variables
 

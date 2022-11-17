@@ -125,8 +125,8 @@ EXE=./example-auto.sh
 	#[ "${lines[0]}" = "arg_wetness = 123" ]
 #}
 
-@test "fn1 h m" {
-	run ${EXE} fn1 h m
+@test "group_1 h m" {
+	run ${EXE} group_1 h m
 	[ "$status" -eq 0 ]
 	[ "${lines[0]}" = "arg_b = " ]
 	[ "${lines[1]}" = "arg_c = 1" ]
@@ -134,8 +134,8 @@ EXE=./example-auto.sh
 	[ "${lines[3]}" = "arg_y = m" ]
 }
 
-@test "fn1 h m --a" {
-	run ${EXE} fn1 h m --a
+@test "group_1 h m --a" {
+	run ${EXE} group_1 h m --a
 	[ "$status" -eq 0 ]
 	[ "${lines[0]}" = "arg_a = 1" ]
 	[ "${lines[1]}" = "arg_b = " ]
@@ -144,8 +144,8 @@ EXE=./example-auto.sh
 	[ "${lines[4]}" = "arg_y = m" ]
 }
 
-@test "fn1 h m --a --b=helena --c=saskia" {
-	run ${EXE} fn1 h m --a --b=helena --c=saskia
+@test "group_1 h m --a --b=helena --c=saskia" {
+	run ${EXE} group_1 h m --a --b=helena --c=saskia
 	[ "$status" -eq 0 ]
 	[ "${lines[0]}" = "arg_a = 1" ]
 	[ "${lines[1]}" = "arg_b = helena" ]

@@ -1,15 +1,23 @@
 #!/bin/bash
+# shellcheck disable=SC2001
 #WAP_SHOULD_EXIT=
-#WAP_DEBUG=1
+#WAP_DEBUG=0
 WAP_SPLIT_TERM='##'
 
 error() {
 	(>&2 echo "$(tput setab 1)$*$(tput sgr0)")
 }
 
+debug() {
+	if (( WAP_DEBUG == 1 )); then
+		(>&2 echo "$(tput setab 2)[DEBUG] $*$(tput sgr0)")
+	fi
+}
+
 wonderful_argument_parser() {
-	# from the top, the function to look for
-	fn=$1;
+	# from the top, parse the signature
+	# shellcheck disable=SC2206
+	signature=($1);
 	# make it drop, so we can parse the rest
 	shift;
 	declare -a parsed_keys
@@ -21,20 +29,14 @@ wonderful_argument_parser() {
 	positional_index=0
 	optional_index=0
 
-	# shellcheck disable=SC2207
-	signature=($(grep "${fn}()" "$0" | sed "s/.*${WAP_SPLIT_TERM} //g"))
 	signature+=('[--help]') # This is always available
-	# Not to specification.
-	#signature+=('[-h]') # This is always available
 
 	for x in "$@"; do
 		args+=("$x");
 		shift;
 	done
 
-	if (( WAP_DEBUG == 1 )); then
-		echo "Signature: ${signature[@]}"
-	fi
+	debug "Signature: ${signature[*]}"
 	for arg in "${signature[@]}"; do
 		if [[ "$arg" == '<'* ]]; then
 			# This is a required argument
@@ -56,12 +58,12 @@ wonderful_argument_parser() {
 	optional_count=${#optional_args[@]}
 
 	if (( WAP_DEBUG == 1 )); then
-		echo Positional args
-		for arg in "${positional_args[@]}"; do echo "  $arg"; done;
-		echo Optional args
-		for arg in "${optional_args[@]}"; do echo "  $arg"; done;
-		echo Optional flag args
-		for arg in "${optional_flag_args[@]}"; do echo "  $arg"; done;
+		debug Positional args
+		for arg in "${positional_args[@]}"; do debug "  $arg"; done;
+		debug Optional args
+		for arg in "${optional_args[@]}"; do debug "  $arg"; done;
+		debug Optional flag args
+		for arg in "${optional_flag_args[@]}"; do debug "  $arg"; done;
 	fi
 
 	# If the help flag is in there, we can short-circuit
@@ -126,20 +128,16 @@ wonderful_argument_parser() {
 						parsed_keys+=("${k}")
 						parsed_vals+=("$val")
 
-						if (( WAP_DEBUG == 1 )); then
-							echo "Parsed ${k} = ${val}"
-						fi
+						debug "Parsed ${k} = ${val}"
 					fi
 				else
 					# This is just a flag
-					if [[ "$arg" == $a_cur ]]; then
+					if [[ "$arg" == "$a_cur" ]]; then
 						k="$(echo "$a_cur" | sed 's/^--//;s/-/_/g')"
 						parsed_keys+=("${k}")
 						parsed_vals+=(1)
 
-						if (( WAP_DEBUG == 1 )); then
-							echo "Parsed ${k} = 1"
-						fi
+						debug "Parsed ${k} = 1"
 					fi
 				fi
 			done
@@ -156,7 +154,8 @@ wonderful_argument_parser() {
 			fi
 
 			if (( positional_index < positional_count )); then
-				parsed_keys+=($(echo "${positional_args[$positional_index]}" | sed 's/|.*//g'))
+				key_fixed=$(echo "${positional_args[$positional_index]}" | sed 's/|.*//g')
+				parsed_keys+=("$key_fixed")
 				parsed_vals+=("${a_cur}")
 				positional_index=$((positional_index + 1))
 			else
@@ -164,6 +163,7 @@ wonderful_argument_parser() {
 				k="${optional_args[$optional_index]}"
 				if [[ "$k" == *'='* ]]; then
 					# Here there is a default supplied.
+					#k="${k//=.*//}"
 					k=$(echo "$k" | sed 's/=.*//g')
 				fi
 
@@ -172,9 +172,7 @@ wonderful_argument_parser() {
 				optional_index=$(( optional_index + 1 ))
 			fi
 
-			if (( WAP_DEBUG == 1 )); then
-				echo "Parsed ${parsed_keys[@]} = ${parsed_vals[@]}"
-			fi
+			debug "Parsed ${parsed_keys[*]} = ${parsed_vals[*]}"
 		fi
 		offset=$(( offset + 1 ))
 	done
@@ -202,49 +200,100 @@ wonderful_argument_parser() {
 
 	size=${#parsed_keys[@]}
 	for i in $(seq 0 $((size - 1))); do
-		if (( WAP_DEBUG == 1)); then
-			printf "SETTING\t%10s=%-10s\n" "${parsed_keys[$i]}" "${parsed_vals[$i]}"
-		fi
+		debug "$(printf "SETTING\t%10s=%-10s\n" "${parsed_keys[$i]}" "${parsed_vals[$i]}")"
+		# shellcheck disable=SC2086
 		export arg_${parsed_keys[$i]}="${parsed_vals[$i]}"
 	done
 }
 
 wap_help() {
 	if (( WAP_HELP == 1 )); then
-		echo HELP [$fn]
+		echo "HELP [$wap_subcommand $wap_fn]"
 		echo
 		cat - | fold -w 80 | sed 's/^/\t/'
 		echo
 		echo -e "Positional Arguments"
-		echo -e $WAP_HELP_POSITIONAL
+		echo -e "$WAP_HELP_POSITIONAL"
 		echo
 		echo -e "Optional Arguments"
-		echo -e $WAP_HELP_OPTIONAL
-		echo -e $WAP_HELP_OPTIONAL_FLAGS
+		echo -e "$WAP_HELP_OPTIONAL"
+		echo -e "$WAP_HELP_OPTIONAL_FLAGS"
 		exit 1
 	fi
 }
 
 wap_debug_available_args() {
+	#echo "Here are the available arguments:"
 	for x in $(compgen -v | grep ^arg_ | sort); do
 		echo "${x} = ${!x}"
 	done
 }
 
+wap_fn_signature() {
+	grep "${1}()" "$0" | sed "s/.*${WAP_SPLIT_TERM} //g;s/: .*//"
+}
+
 # TODO: update with gxadmin version of function discovery.
 wapify() {
 	# Discover functions
-	fn=$1; shift;
-	LC_ALL=C type "$fn" 2> /dev/null | grep -q 'function'
+	wap_fn=$1; shift;
+	LC_ALL=C type "$wap_fn" 2> /dev/null | grep -q 'function'
 	ec=$?
 
 	if (( ec != 0 )); then
 		echo "Available commands:"
 		echo
-		grep '()\s*{\s*'"${WAP_SPLIT_TERM}" $0 | sed 's/().*//g' | sort
+		grep '()\s*{\s*'"${WAP_SPLIT_TERM}" "$0" | sed -r 's/\(\).*:\s*/\t/g;s/^/\t/' | column -t -s"	"| sort
 		exit 1
 	fi
 
-	wonderful_argument_parser $fn $@
-	$fn
+	wonderful_argument_parser "$(wap_fn_signature "$wap_fn")" "$@"
+	$wap_fn
+}
+
+wapify_subcommands_help() {
+	subcommand_groups=()
+	while IFS='' read -r line; do subcommand_groups+=("$line"); done < \
+		<(grep '()\s*{\s*'"${WAP_SPLIT_TERM}" "$0" | sed 's/().*//g' | sort | cut -d _ -f 1 | uniq)
+
+	echo "$0 usage:"
+	echo
+	for group in "${subcommand_groups[@]}"; do
+		echo -e "\t$group"
+	done
+	echo
+	exit 0
+}
+
+wapify_subcommands() {
+	# Discover subcommand groups
+
+	subcommand_groups=()
+	while IFS='' read -r line; do subcommand_groups+=("$line"); done < \
+		<(grep '()\s*{\s*'"${WAP_SPLIT_TERM}" "$0" | sed 's/().*//g' | sort | cut -d _ -f 1 | uniq)
+
+	if [[ "$1" == "--help" ]] || (( $# == 0 )); then
+		wapify_subcommands_help
+	fi
+
+	# Parse out the subcommand
+	wap_subcommand=$1;
+	shift;
+
+	# Subcommand help
+	if (( $# == 0 )) ||  [[ "$1" == "--help" ]]; then
+		echo "Available functions in $0 $wap_subcommand:"
+		echo
+		grep "$wap_subcommand"'.*()\s*{\s*'"${WAP_SPLIT_TERM}" "$0" | sed -r "s/\(\).*:\s*/\t/g;s/^/\t/;s/${wap_fn}_/${wap_fn} /" | column -t -s"	"| sort
+		echo
+		exit 0
+	fi
+
+	wap_fn=$1;
+	shift;
+
+	debug "${wap_subcommand}_${wap_fn}"
+	debug "$(wap_fn_signature "${wap_subcommand}_${wap_fn}")"
+	wonderful_argument_parser "$(wap_fn_signature "${wap_subcommand}_${wap_fn}")" "$@"
+	"${wap_subcommand}_${wap_fn}"
 }

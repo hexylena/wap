@@ -11,7 +11,7 @@ fn() { ## <req> <req2> [optionalA] [optionalB] [--weeks=24] [--email=user@host] 
 
 # Parse the arguments.
 # WAP searches out the function (in this script), and exports the appropriate variables.
-wonderful_argument_parser fn $@
+wonderful_argument_parser "$(wap_fn_signature "fn")" "$@"
 
 # Call the function
 fn
