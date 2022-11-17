@@ -95,8 +95,6 @@ wonderful_argument_parser() {
 		fi
 	done
 
-
-
 	while true; do
 		# Get the first bit of content from the arguments
 		a_cur=${args[$offset]}
@@ -171,21 +169,20 @@ wonderful_argument_parser() {
 				parsed_vals+=("${a_cur}")
 				optional_index=$(( optional_index + 1 ))
 			fi
-
 			debug "Parsed ${parsed_keys[*]} = ${parsed_vals[*]}"
 		fi
 		offset=$(( offset + 1 ))
 	done
 
 	# Set all default optional args, if they aren't set
-	#if (( optional_index < optional_count )); then
-		#for i in $(seq $optional_index $((optional_count - 1)) ); do
-			#if [[ "${optional_args[$i]}" == *'='* ]]; then
-				#parsed_keys+=("$(echo "$optional_args" | sed 's/=.*//g')")
-				#parsed_vals+=("$(echo "$optional_args" | sed 's/.*=//g')")
-			#fi
-		#done
-	#fi
+	if (( optional_index < optional_count )); then
+		for i in $(seq $optional_index $((optional_count - 1)) ); do
+			if [[ "${optional_args[$i]}" == *'='* ]]; then
+				parsed_keys+=("$(echo "$optional_args" | sed 's/=.*//g')")
+				parsed_vals+=("$(echo "$optional_args" | sed 's/.*=//g')")
+			fi
+		done
+	fi
 
 	if (( positional_index < positional_count )); then
 		for i in $(seq $positional_index $(( positional_count - 1 )) ); do

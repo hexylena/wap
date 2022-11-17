@@ -45,6 +45,14 @@ fn_optional(){ ## [optional]: A completely optional thing
 	wap_debug_available_args
 }
 
+fn_optional_default(){ ## [wetness=9]: A completely optional thing with a default value
+	wap_help <<-EOF
+		optional
+	EOF
+
+	wap_debug_available_args
+}
+
 _group_help="More Advanced"
 group_1(){ ## <x> <y|z> [user|email|id] [--a] [--b=] [--c=1]: Fancy!
 	wap_help <<-EOF

@@ -113,17 +113,17 @@ EXE=./example-auto.sh
 	[ "${lines[0]}" = "arg_optional = something" ]
 }
 
-#@test "fn_optional_default" {
-	#run ${EXE} fn_optional_default
-	#[ "$status" -eq 0 ]
-	#[ "${lines[0]}" = "arg_wetness = 9" ]
-#}
+@test "fn_optional_default" {
+	run ${EXE} fn_optional_default
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = "arg_wetness = 9" ]
+}
 
-#@test "fn_optional_default 123" {
-	#run ${EXE} fn_optional_default 123
-	#[ "$status" -eq 0 ]
-	#[ "${lines[0]}" = "arg_wetness = 123" ]
-#}
+@test "fn_optional_default 123" {
+	run ${EXE} fn_optional_default 123
+	[ "$status" -eq 0 ]
+	[ "${lines[0]}" = "arg_wetness = 123" ]
+}
 
 @test "group_1 h m" {
 	run ${EXE} group_1 h m
