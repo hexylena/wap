@@ -13,20 +13,20 @@ Very ugly.
 
 ## Instead, WAP
 
-```
+```bash
 # Load the Wonderful Argument Parser library
 . wap.sh
 
 # Define our function
-fn() { ## <something> <sth2> [weeks|1] [--email|user@host] [--flag1] [--f3]
+fn() { ## <req1> <req2> [--weeks=1] [--email=user@host] [--flag1] [--flag2]
 
 	# These variables are auto-magically set.
-	echo "something=$arg_something"
-	echo "     sth2=$arg_sth2"
-	echo "    weeks=$arg_weeks"
-	echo "    email=$arg_email"
-	echo "    flag1=$arg_flag1"
-	echo "       f3=$arg_f3"
+	echo "  req1=$arg_req1"
+	echo "  req2=$arg_req1"
+	echo " weeks=$arg_weeks"
+	echo " email=$arg_email"
+	echo " flag1=$arg_flag1"
+	echo " flag2=$arg_flag2"
 }
 
 # Parse the arguments, do the magic
@@ -47,7 +47,7 @@ For easiest usage, just call WAPify
 . wap.sh
 
 # Define our function
-fn1() { ## <something> <sth2> [testing] [weeks|24] [--email|user@host] [--flag1] [--f3]
+fn1() { ## <hello> <world>
 	wap_help <<-EOF
 		This does a lot of things with very many arguments. Prints out all of the arguments.
 	EOF
@@ -67,43 +67,6 @@ wapify $@
 ```
 
 Compatible functions will be auto-discovered, help menus rendered when necessary (--help | -h), and a function list provided, should they invoke the command without arguments.
-
-
-## Examples
-
-When you run this example:
-
-
-```
-$ ./example.sh a b
-something=a
-     sth2=b
-    weeks=
-    email=
-    flag1=
-       f3=
-$ ./example.sh a b --f3 4
-something=a
-     sth2=b
-    weeks=4
-    email=
-    flag1=
-       f3=1
-$ ./example.sh a b --f3 4 --email h@localhost
-something=a
-     sth2=b
-    weeks=4
-    email=h@localhost
-    flag1=
-       f3=1
-$ ./example.sh a b --f3 4 --email h@localhost --flag1
-something=a
-     sth2=b
-    weeks=4
-    email=h@localhost
-    flag1=1
-       f3=1
-```
 
 Mandatory arguments are ensured:
 
