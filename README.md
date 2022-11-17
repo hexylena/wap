@@ -40,7 +40,7 @@ fn
 
 For easiest usage, just call WAPify
 
-```
+```bash
 #!/bin/bash
 
 # Load the Wonderful Argument Parser library
