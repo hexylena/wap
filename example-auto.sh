@@ -42,13 +42,13 @@ fn_optional(){ ## [optional]
 	echo $arg_optional
 }
 
-fn_optional_default(){ ## [optional_default=4]
-	wap_help <<-EOF
-		optional_default
-	EOF
+#fn_optional_default(){ ## [optional_default=4]
+	#wap_help <<-EOF
+		#optional_default
+	#EOF
 
-	echo $arg_optional_default
-}
+	#echo $arg_optional_default
+#}
 
 fn1(){ ## <x> <y|z> [user|email|id] [--a] [--b=] [--c=1]
 	wap_help <<-EOF

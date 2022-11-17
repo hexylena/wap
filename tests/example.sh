@@ -4,7 +4,7 @@
 . wap.sh
 
 # Define our function
-fn() { ## <req> <req2> [optionalA] [optionalB=with_a_default] [--weeks=24] [--email=user@host] [--flag1] [--flag2]
+fn() { ## <req> <req2> [optionalA] [--weeks=24] [--email=user@host] [--flag1] [--flag2]
 	wap_help <<< "This is an example WAP-ified function"
 	wap_debug_available_args
 }
